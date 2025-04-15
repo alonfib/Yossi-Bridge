@@ -6,6 +6,7 @@ import { generateValidDeal } from '../utils/utils';
 import { Hand } from './Hand/Hand';
 import { BiddingTypeMenu } from './bidding/BiddingTypeMenu';
 import { handleBid } from '../utils/game';
+import useHandleBid from '../hooks/useHandleBid';
 
 const BID_SUITS: (Suit | 'NT')[] = ['♠', '♥', '♦', '♣', 'NT'];
 const BID_LEVELS: BidLevel[] = [1, 2, 3, 4, 5, 6, 7];
@@ -39,12 +40,32 @@ const initialGameState: GameState = {
 
 export const Game: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>(initialGameState);
-    const [selectedLevel, setSelectedLevel] = useState<BidLevel | null>(null);
-    const [selectedSuit, setSelectedSuit] = useState<Suit | null>(null);
+    const { selectedLevel, selectedSuit, setSelectedLevel, setSelectedSuit, resetAnswer } = useHandleBid({
+        hand: gameState.hands.North,
+        onAnswerSubmitted: (isValid: boolean) => {
+            console.log('Is answer valid:', isValid);
+        }
+    });
+    const startNewGame = () => {
+        resetAnswer();
+        const sortedHands = generateValidDeal();
+
+        setGameState({
+            ...initialGameState,
+            hands: {
+                North: sortedHands[0],
+                East: sortedHands[1],
+                South: sortedHands[2],
+                West: sortedHands[3]
+            }
+        });
+    };
 
     useEffect(() => {
         startNewGame();
+    }, []);
 
+    useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
             // Handle number keys for bid level
             if (e.key >= '1' && e.key <= '7') {
@@ -81,19 +102,7 @@ export const Game: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, [selectedLevel, selectedSuit, handleBid]);
 
-    const startNewGame = () => {
-        const sortedHands = generateValidDeal();
 
-        setGameState({
-            ...initialGameState,
-            hands: {
-                North: sortedHands[0],
-                East: sortedHands[1],
-                South: sortedHands[2],
-                West: sortedHands[3]
-            }
-        });
-    };
 
     return (
         <div className="game-container">
@@ -137,30 +146,6 @@ export const Game: React.FC = () => {
                 >
                     PASS
                 </button>
-                {/* <button
-                    className="submit-bid"
-                    onClick={() => {
-                        if (selectedLevel && selectedSuit) {
-                            handleBid({
-                                level: selectedLevel,
-                                suit: selectedSuit,
-                                hand: gameState.hands.North,
-                                setGameState,
-                                setSelectedLevel,
-                                setSelectedSuit
-                            });
-                        } else {
-                            setGameState(prevState => ({
-                                ...prevState,
-                                bidding: [...prevState.bidding, { type: 'pass', player: 'North' }]
-                            }));
-                        }
-                        setSelectedLevel(null);
-                        setSelectedSuit(null);
-                    }}
-                >
-                    PASS
-                </button> */}
             </div>
             <BiddingTypeMenu />
         </div>

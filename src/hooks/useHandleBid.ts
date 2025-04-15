@@ -5,9 +5,10 @@ import { isValidBid } from '../utils/handEvaluation';
 
 type UseHandleBidProps = {
     hand: CardType[];
+    onAnswerSubmitted: (isValid: boolean) => void;
 }
 
-const useHandleBid = ({ hand }: UseHandleBidProps) => {
+const useHandleBid = ({ hand, onAnswerSubmitted }: UseHandleBidProps) => {
     const [selectedLevel, setSelectedLevel] = useState<BidLevel | null>(null);
     const [selectedSuit, setSelectedSuit] = useState<Suit | null>(null);
     /** undefined means the bid is not yet submitted */
@@ -22,13 +23,15 @@ const useHandleBid = ({ hand }: UseHandleBidProps) => {
         if (selectedLevel && selectedSuit) {
             const isValid = isValidBid(hand, selectedLevel, selectedSuit);
             setIsCorrect(isValid);
+            onAnswerSubmitted(isValid);
         } else if (selectedSuit === 'PASS') {
             const isValid = isValidBid(hand, undefined, 'PASS');
             setIsCorrect(isValid);
+            onAnswerSubmitted(isValid);
         }
-    }, [selectedLevel, selectedSuit, hand]);
+    }, [selectedLevel, selectedSuit, hand, onAnswerSubmitted]);
 
-    return { selectedLevel, selectedSuit, isCorrect, resetAnswer };
+    return { selectedLevel, selectedSuit, isCorrect, resetAnswer, setSelectedLevel, setSelectedSuit, onAnswerSubmitted };
 };
 
 export default useHandleBid;
