@@ -1,0 +1,235 @@
+// Variables
+$background-color: #f0f0f0;
+$board-color: #2c6e49;
+$text-color: #333;
+$button-color: #4caf50;
+$button-hover: #45a049;
+$card-border: #ddd;
+
+.game-container {
+  display: grid;
+  width: 100vw;
+  height: 100vh;
+  grid-template-columns: minmax(auto, 1fr) 1fr minmax(auto, 1fr);
+  grid-template-rows: minmax(auto, 1fr) 1fr minmax(auto, 1fr);
+  background-color: $background-color;
+  place-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.game-board {
+  grid-column: 2;
+  grid-row: 2;
+  width: 600px;
+  height: 600px;
+  background-color: $board-color;
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.hand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+
+  h3 {
+    color: $text-color;
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+    white-space: nowrap;
+  }
+
+  // North and South hands
+  &.north, &.south {
+    grid-column: 2;
+    .cards {
+      display: flex;
+      gap: 32px; // Space between suit groups
+    }
+    .suit-group {
+      .card {
+        margin-left: -15px;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &.north {
+    grid-row: 1;
+    align-self: flex-end;
+    margin-bottom: 40px;
+  }
+
+  &.south {
+    grid-row: 3;
+    align-self: flex-start;
+    margin-top: 40px;
+  }
+
+  // East and West hands
+  &.east, &.west {
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px; // Space between suit groups
+    }
+    .suit-group {
+      .card {
+        margin-left: -25px;
+        &:first-child {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &.east {
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: start;
+    margin-left: 40px;
+  }
+
+  &.west {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: end;
+    margin-right: 40px;
+  }
+}
+
+.suit-group {
+  display: flex;
+}
+
+.card {
+  width: 45px;
+  height: 63px;
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid $card-border;
+  position: relative;
+
+  &:hover {
+    transform: translateY(-5px);
+    z-index: 2;
+  }
+}
+
+.rank {
+  color: black;
+  font-weight: bold;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+
+  &.bottom {
+    top: auto;
+    bottom: 2px;
+    right: 2px;
+    left: auto;
+    transform: rotate(180deg);
+  }
+}
+
+.suit {
+  font-size: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  &[data-suit="♥"] { color: #ff0000; }
+  &[data-suit="♦"] { color: #ffa500; }
+  &[data-suit="♠"] { color: #0000ff; }
+  &[data-suit="♣"] { color: #006400; }
+}
+
+.center-area {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-controls {
+  margin: 0;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: $button-color;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  &:hover {
+    background-color: $button-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (max-width: 1150px) {
+  .game-container {
+    grid-template-columns: minmax(auto, 1fr) 600px minmax(auto, 1fr);
+    grid-template-rows: minmax(auto, 1fr) 600px minmax(auto, 1fr);
+  }
+
+  .game-board {
+    width: 450px;
+    height: 450px;
+  }
+
+  .card {
+    width: 40px;
+    height: 56px;
+    font-size: 12px;
+  }
+
+  .hand {
+    &.north, &.south {
+      .cards {
+        gap: 24px;
+      }
+    }
+    
+    &.east, &.west {
+      .cards {
+        gap: 8px;
+      }
+    }
+
+    &.north { margin-bottom: 30px; }
+    &.south { margin-top: 30px; }
+    &.east { margin-left: 30px; }
+    &.west { margin-right: 30px; }
+  }
+
+  .suit {
+    font-size: 20px;
+  }
+} 
