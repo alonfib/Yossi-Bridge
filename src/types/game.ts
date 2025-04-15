@@ -1,21 +1,20 @@
-import { Card, Suit } from './card';
+import { CardType, Suit } from './card';
 
 export type PlayerPosition = 'North' | 'East' | 'South' | 'West';
 
 export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-export type Bid = {
-    type: 'bid';
-    level: BidLevel;
-    suit: Suit | 'NT';
+export type BidType = 'bid' | 'pass' | 'double' | 'redouble';
+
+export interface Bid {
+    type: BidType;
+    level?: BidLevel;
+    suit?: Suit;
     player: PlayerPosition;
-} | {
-    type: 'pass';
-    player: PlayerPosition;
-};
+}
 
 export interface GameState {
-    hands: Record<PlayerPosition, Card[]>;
+    hands: Record<PlayerPosition, CardType[]>;
     currentPlayer: PlayerPosition;
     dealer: PlayerPosition;
     vulnerability: {
@@ -27,7 +26,7 @@ export interface GameState {
     declarer: PlayerPosition | null;
     dummy: PlayerPosition | null;
     currentTrick: {
-        cards: Card[];
+        cards: CardType[];
         leader: PlayerPosition;
     };
     tricks: {

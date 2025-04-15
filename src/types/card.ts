@@ -1,10 +1,13 @@
-export type Suit = '♠' | '♥' | '♦' | '♣';
+export type Suit = '♠' | '♥' | '♦' | '♣' | 'NT' | 'PASS';
 export type Rank = 'A' | 'K' | 'Q' | 'J' | '10' | '9' | '8' | '7' | '6' | '5' | '4' | '3' | '2';
 
-export interface Card {
+export interface CardType {
     suit: Suit;
     rank: Rank;
 }
+
+export const CARD_SUITS: Suit[] = ['♠', '♥', '♦', '♣'];
+export const CARD_RANKS: Rank[] = ['A', 'K', 'Q', 'J', '10', '9', '8', '7', '6', '5', '4', '3', '2'];
 
 export const CARD_POINTS: Record<Rank, number> = {
     'A': 4,

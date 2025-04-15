@@ -1,0 +1,87 @@
+@use '../../styles/variables' as *;
+
+.hand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  
+    h3 {
+      color: $text-color;
+      margin: 0 0 8px 0;
+      font-size: 16px;
+      text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+      white-space: nowrap;
+    }
+  
+    // North and South hands
+    &.north, &.south {
+      .cards {
+        display: flex;
+        gap: 32px; // Space between suit groups
+      }
+      .suit-group {
+        .card {
+          margin-left: -15px;
+          &:first-child {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  
+    &.north {
+      margin-bottom: 20px;
+    }
+  
+    &.south {
+      margin-top: 20px;
+    }
+  
+    // East and West hands
+    &.east, &.west {
+      .cards {
+        display: flex;
+        flex-direction: column;
+        gap: 12px; // Space between suit groups
+      }
+      .suit-group {
+        .card {
+          margin-left: -25px;
+          &:first-child {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  
+    &.east {
+      margin-left: 20px;
+    }
+  
+    &.west {
+      margin-right: 20px;
+    }
+  }
+  
+  @media (max-width: 1150px) {
+
+    .hand {
+      &.north, &.south {
+        .cards {
+          gap: 24px;
+        }
+      }
+      
+      &.east, &.west {
+        .cards {
+          gap: 8px;
+        }
+      }
+  
+      &.north { margin-bottom: 30px; }
+      &.south { margin-top: 30px; }
+      &.east { margin-left: 30px; }
+      &.west { margin-right: 30px; }
+    }
+  }

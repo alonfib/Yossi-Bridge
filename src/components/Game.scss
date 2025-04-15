@@ -1,10 +1,4 @@
-// Variables
-$background-color: #f0f0f0;
-$board-color: #2c6e49;
-$text-color: #333;
-$button-color: #4caf50;
-$button-hover: #45a049;
-$card-border: #ddd;
+@use '../styles/variables' as *;
 
 .game-container {
   display: flex;
@@ -25,93 +19,6 @@ $card-border: #ddd;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: relative;
-}
-
-.hand {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-
-  h3 {
-    color: $text-color;
-    margin: 0 0 8px 0;
-    font-size: 16px;
-    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-    white-space: nowrap;
-  }
-
-  // North and South hands
-  &.north, &.south {
-    .cards {
-      display: flex;
-      gap: 32px; // Space between suit groups
-    }
-    .suit-group {
-      .card {
-        margin-left: -15px;
-        &:first-child {
-          margin-left: 0;
-        }
-      }
-    }
-  }
-
-  &.north {
-    margin-bottom: 20px;
-  }
-
-  &.south {
-    margin-top: 20px;
-  }
-
-  // East and West hands
-  &.east, &.west {
-    .cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px; // Space between suit groups
-    }
-    .suit-group {
-      .card {
-        margin-left: -25px;
-        &:first-child {
-          margin-left: 0;
-        }
-      }
-    }
-  }
-
-  &.east {
-    margin-left: 20px;
-  }
-
-  &.west {
-    margin-right: 20px;
-  }
-}
-
-.suit-group {
-  display: flex;
-}
-
-.card {
-  width: 55px;
-  height: 77px;
-  background-color: white;
-  border-radius: 4px;
-  padding: 4px;
-  font-size: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid $card-border;
-  position: relative;
-
-  &:hover {
-    transform: translateY(-5px);
-    z-index: 2;
-  }
 }
 
 .rank {
@@ -190,31 +97,6 @@ button {
   .game-board {
     width: 450px;
     height: 450px;
-  }
-
-  .card {
-    width: 40px;
-    height: 56px;
-    font-size: 12px;
-  }
-
-  .hand {
-    &.north, &.south {
-      .cards {
-        gap: 24px;
-      }
-    }
-    
-    &.east, &.west {
-      .cards {
-        gap: 8px;
-      }
-    }
-
-    &.north { margin-bottom: 30px; }
-    &.south { margin-top: 30px; }
-    &.east { margin-left: 30px; }
-    &.west { margin-right: 30px; }
   }
 
   .suit {
@@ -325,88 +207,3 @@ button {
   }
 }
 
-.bidding-type-menu {
-  position: fixed;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background-color: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  width: 200px;
-
-  h3 {
-    color: #1A237E;
-    font-size: 18px;
-    margin: 0 0 10px 0;
-    text-align: center;
-  }
-
-  .bid-type-option {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background-color: rgba(232, 234, 246, 0.5);
-    }
-
-    input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 20px;
-      height: 20px;
-      border: 2px solid #1A237E;
-      border-radius: 4px;
-      outline: none;
-      cursor: pointer;
-      position: relative;
-      background-color: white;
-      transition: all 0.2s ease;
-
-      &:checked {
-        background-color: #1A237E;
-        border-color: #1A237E;
-
-        &::after {
-          content: '✓';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          color: white;
-          font-size: 14px;
-          font-weight: bold;
-        }
-      }
-
-      &:hover {
-        border-color: #3949AB;
-        box-shadow: 0 0 0 1px rgba(26, 35, 126, 0.1);
-      }
-    }
-
-    .bid-type-text {
-      flex: 1;
-      color: #1A237E;
-      font-size: 16px;
-      font-weight: bold;
-
-      .points {
-        display: block;
-        font-size: 14px;
-        color: #666;
-        font-weight: normal;
-        margin-top: 2px;
-      }
-    }
-  }
-} 

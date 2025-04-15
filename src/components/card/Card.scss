@@ -1,0 +1,44 @@
+@use '../../styles/variables' as *;
+
+.card {
+    width: 55px;
+    height: 77px;
+    background-color: white;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid $card-border;
+    position: relative;
+  
+    &:hover {
+      transform: translateY(-5px);
+      z-index: 2;
+    }
+    .rank {
+        color: black;
+        font-weight: bold;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        font-size: 16px;
+      
+        &.bottom {
+          top: auto;
+          bottom: 4px;
+          right: 4px;
+          left: auto;
+          transform: rotate(180deg);
+        }
+      }
+  }
+
+  @media (max-width: 1150px) {
+    .card {
+      width: 40px;
+      height: 56px;
+      font-size: 12px;
+    }
+}  
