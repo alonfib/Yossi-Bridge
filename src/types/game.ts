@@ -2,11 +2,17 @@ import { Card, Suit } from './card';
 
 export type PlayerPosition = 'North' | 'East' | 'South' | 'West';
 
-export interface Bid {
-    level: number;
+export type BidLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export type Bid = {
+    type: 'bid';
+    level: BidLevel;
     suit: Suit | 'NT';
     player: PlayerPosition;
-}
+} | {
+    type: 'pass';
+    player: PlayerPosition;
+};
 
 export interface GameState {
     hands: Record<PlayerPosition, Card[]>;

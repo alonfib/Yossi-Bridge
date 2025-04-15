@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { createDeck, shuffleDeck, dealHands, sortHand } from '../utils/deck';
-import { GameState, PlayerPosition } from '../types/game';
+import { GameState, PlayerPosition, BidLevel, Bid } from '../types/game';
 import { Card as CardType, Suit, CARD_POINTS } from '../types/card';
 import './Game.scss';
 
-const SUITS: Suit[] = ['♠', '♥', '♦', '♣'];
+const CARD_SUITS: Suit[] = ['♠', '♥', '♦', '♣'];
+const BID_SUITS: (Suit | 'NT')[] = ['♠', '♥', '♦', '♣', 'NT'];
+const BID_LEVELS: BidLevel[] = [1, 2, 3, 4, 5, 6, 7];
 
 const initialGameState: GameState = {
     hands: {
@@ -38,24 +40,6 @@ const getHighCardPoints = (hand: CardType[]): number => {
     return hand.reduce((sum, card) => sum + (CARD_POINTS[card.rank] || 0), 0);
 };
 
-const getSuitLength = (hand: CardType[], suit: Suit): number => {
-    return hand.filter(card => card.suit === suit).length;
-};
-
-const isBalanced = (hand: CardType[]): boolean => {
-    const suitLengths = SUITS.map(suit => getSuitLength(hand, suit));
-    const hasDoubletons = suitLengths.filter(length => length === 2).length;
-    const hasSingleton = suitLengths.some(length => length === 1);
-    const hasVoid = suitLengths.some(length => length === 0);
-
-    return !hasSingleton && !hasVoid && hasDoubletons <= 1;
-};
-
-const is1NTOpening = (hand: CardType[]): boolean => {
-    const points = getHighCardPoints(hand);
-    return points >= 15 && points <= 17 && isBalanced(hand);
-};
-
 const generateValidDeal = (): CardType[][] => {
     let attempts = 0;
     const maxAttempts = 1000;
@@ -64,8 +48,9 @@ const generateValidDeal = (): CardType[][] => {
         const deck = shuffleDeck(createDeck());
         const hands = dealHands(deck);
         const northHand = hands[0];
+        const points = getHighCardPoints(northHand);
 
-        if (is1NTOpening(northHand)) {
+        if (points >= 12) {
             return hands.map(sortHand);
         }
         attempts++;
@@ -121,7 +106,7 @@ const Hand: React.FC<HandProps> = ({ position, cards, showPoints }) => {
         <div className={`hand ${position.toLowerCase()}`}>
             <h3>{position}{points !== null ? ` (${points} HCP)` : ''}</h3>
             <div className="cards">
-                {SUITS.map(suit => (
+                {CARD_SUITS.map(suit => (
                     <SuitGroup key={suit} cards={cards} suit={suit} position={position} />
                 ))}
             </div>
@@ -129,8 +114,62 @@ const Hand: React.FC<HandProps> = ({ position, cards, showPoints }) => {
     );
 };
 
+const BiddingTypeMenu: React.FC = () => {
+    const [selectedBidTypes, setSelectedBidTypes] = useState<Set<string>>(new Set());
+
+    const handleCheckboxChange = (value: string) => {
+        setSelectedBidTypes(prev => {
+            const newSet = new Set(prev);
+            if (newSet.has(value)) {
+                newSet.delete(value);
+            } else {
+                newSet.add(value);
+            }
+            return newSet;
+        });
+    };
+
+    return (
+        <div className="bidding-type-menu">
+            <h3>Opening Bids</h3>
+            <label className="bid-type-option">
+                <input
+                    type="checkbox"
+                    checked={selectedBidTypes.has("1NT")}
+                    onChange={() => handleCheckboxChange("1NT")}
+                />
+                <span className="bid-type-text">
+                    NT
+                </span>
+            </label>
+            <label className="bid-type-option">
+                <input
+                    type="checkbox"
+                    checked={selectedBidTypes.has("1M")}
+                    onChange={() => handleCheckboxChange("1M")}
+                />
+                <span className="bid-type-text">
+                    1♥/1♠
+                </span>
+            </label>
+            <label className="bid-type-option">
+                <input
+                    type="checkbox"
+                    checked={selectedBidTypes.has("1m")}
+                    onChange={() => handleCheckboxChange("1m")}
+                />
+                <span className="bid-type-text">
+                    1♣/1♦
+                </span>
+            </label>
+        </div>
+    );
+};
+
 export const Game: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>(initialGameState);
+    const [selectedLevel, setSelectedLevel] = useState<BidLevel | null>(null);
+    const [selectedSuit, setSelectedSuit] = useState<Suit | 'NT' | null>(null);
 
     useEffect(() => {
         startNewGame();
@@ -150,10 +189,26 @@ export const Game: React.FC = () => {
         });
     };
 
+    const handleBid = (level: BidLevel, suit: Suit | 'NT') => {
+        const newBid: Bid = {
+            type: 'bid',
+            level,
+            suit,
+            player: 'North'
+        };
+
+        setGameState(prevState => ({
+            ...prevState,
+            bidding: [...prevState.bidding, newBid]
+        }));
+
+        setSelectedLevel(null);
+        setSelectedSuit(null);
+    };
+
     return (
         <div className="game-container">
             <Hand position="North" cards={gameState.hands.North} showPoints={true} />
-            <Hand position="West" cards={gameState.hands.West} />
             <div className="game-board">
                 <div className="center-area">
                     <div className="game-controls">
@@ -161,8 +216,49 @@ export const Game: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <Hand position="East" cards={gameState.hands.East} />
-            <Hand position="South" cards={gameState.hands.South} />
+            <div className="bidding-interface">
+                <div className="bid-levels">
+                    {BID_LEVELS.map(level => (
+                        <button
+                            key={level}
+                            className={`bid-button ${selectedLevel === level ? 'selected' : ''}`}
+                            onClick={() => setSelectedLevel(level)}
+                        >
+                            {level}
+                        </button>
+                    ))}
+                </div>
+                <div className="bid-suits">
+                    {BID_SUITS.map(suit => (
+                        <button
+                            key={suit}
+                            className={`bid-button ${selectedSuit === suit ? 'selected' : ''}`}
+                            onClick={() => setSelectedSuit(suit)}
+                            data-suit={suit}
+                        >
+                            {suit}
+                        </button>
+                    ))}
+                </div>
+                <button
+                    className="submit-bid"
+                    onClick={() => {
+                        if (selectedLevel && selectedSuit) {
+                            handleBid(selectedLevel, selectedSuit);
+                        } else {
+                            setGameState(prevState => ({
+                                ...prevState,
+                                bidding: [...prevState.bidding, { type: 'pass', player: 'North' }]
+                            }));
+                        }
+                        setSelectedLevel(null);
+                        setSelectedSuit(null);
+                    }}
+                >
+                    PASS
+                </button>
+            </div>
+            <BiddingTypeMenu />
         </div>
     );
 }; 
