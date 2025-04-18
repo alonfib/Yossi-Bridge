@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+try not to pass 120 lines per file, 180 is the max max max
+
+if you create component make sure you split the files and create new component file
+
+- You can @ files here
+- You can use markdown but dont have to
