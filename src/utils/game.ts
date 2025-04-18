@@ -9,10 +9,11 @@ type HandleBid = {
     setGameState: (prevState: GameState) => void,
     setSelectedLevel: (level: BidLevel | null) => void,
     setSelectedSuit: (suit: Suit | null) => void,
+    onBidResult?: (isValid: boolean) => void,
 }
 
 export const handleBid = (props: HandleBid) => {
-    const { level, suit, hand, setGameState, setSelectedLevel, setSelectedSuit } = props;
+    const { level, suit, hand, setGameState, setSelectedLevel, setSelectedSuit, onBidResult } = props;
     const isValid = isValidBid(hand, level, suit);
 
     const newBid: Bid = {
@@ -31,10 +32,8 @@ export const handleBid = (props: HandleBid) => {
     setSelectedLevel(null);
     setSelectedSuit(null);
 
-    // Show feedback to user
-    if (isValid) {
-        alert('Correct bid!');
-    } else {
-        alert('Incorrect bid. Please try again.');
+    // Call the callback if provided
+    if (onBidResult) {
+        onBidResult(isValid);
     }
 };

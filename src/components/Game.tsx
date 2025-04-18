@@ -7,6 +7,7 @@ import { BiddingTypeMenu } from './bidding/BiddingTypeMenu';
 import { handleBid } from '../utils/game';
 import useHandleBid from '../hooks/useHandleBid';
 import BiddingBox from './BiddingBox/BiddingBox';
+import { Popup } from './Popup/Popup';
 
 
 
@@ -39,14 +40,31 @@ const initialGameState: GameState = {
 
 export const Game: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>(initialGameState);
+    const [showPopup, setShowPopup] = useState(false);
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [bidSubmitted, setBidSubmitted] = useState(false);
     const { selectedLevel, selectedSuit, setSelectedLevel, setSelectedSuit, resetAnswer } = useHandleBid({
         hand: gameState.hands.North,
         onAnswerSubmitted: (isValid: boolean) => {
-            console.log('Is answer valid:', isValid);
+            if (!bidSubmitted) {
+                setIsCorrect(isValid);
+                setShowPopup(true);
+                setBidSubmitted(true);
+            }
         }
     });
+
+    const handleBidResult = (isValid: boolean) => {
+        if (!bidSubmitted) {
+            setIsCorrect(isValid);
+            setShowPopup(true);
+            setBidSubmitted(true);
+        }
+    };
+
     const startNewGame = () => {
         resetAnswer();
+        setBidSubmitted(false);
         const sortedHands = generateValidDeal();
 
         setGameState({
@@ -92,7 +110,8 @@ export const Game: React.FC = () => {
                     hand: gameState.hands.North,
                     setGameState,
                     setSelectedLevel,
-                    setSelectedSuit
+                    setSelectedSuit,
+                    onBidResult: handleBidResult
                 });
             }
         };
@@ -108,13 +127,18 @@ export const Game: React.FC = () => {
             <Hand position="North" cards={gameState.hands.North} showPoints={true} />
             <div className="game-board">
                 <div className="center-area">
-                    <div className="game-controls">
-                        <button onClick={startNewGame}>New Game</button>
-                    </div>
                 </div>
             </div>
             <BiddingBox selectedLevel={selectedLevel} selectedSuit={selectedSuit} setSelectedLevel={setSelectedLevel} setSelectedSuit={setSelectedSuit} />
             <BiddingTypeMenu />
+            <button className="new-game-button" onClick={startNewGame}>New Game</button>
+            {showPopup && (
+                <Popup
+                    message={isCorrect ? "Correct!" : "Wrong!"}
+                    isCorrect={isCorrect}
+                    onClose={() => setShowPopup(false)}
+                />
+            )}
         </div>
     );
 }; 

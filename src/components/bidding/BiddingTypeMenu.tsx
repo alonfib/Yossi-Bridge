@@ -4,7 +4,7 @@ import './BiddingTypeMenu.scss';
 export const BiddingTypeMenu: React.FC = () => {
     const [selectedBidTypes, setSelectedBidTypes] = useState<Set<string>>(new Set());
 
-    const handleCheckboxChange = (value: string) => {
+    const handleButtonClick = (value: string) => {
         setSelectedBidTypes(prev => {
             const newSet = new Set(prev);
             if (newSet.has(value)) {
@@ -19,36 +19,30 @@ export const BiddingTypeMenu: React.FC = () => {
     return (
         <div className="bidding-type-menu">
             <h3>Opening Bids</h3>
-            <label className="bid-type-option">
-                <input
-                    type="checkbox"
-                    checked={selectedBidTypes.has("1NT")}
-                    onChange={() => handleCheckboxChange("1NT")}
-                />
-                <span className="bid-type-text">
-                    NT
-                </span>
-            </label>
-            <label className="bid-type-option">
-                <input
-                    type="checkbox"
-                    checked={selectedBidTypes.has("1M")}
-                    onChange={() => handleCheckboxChange("1M")}
-                />
-                <span className="bid-type-text">
-                    1♥/1♠
-                </span>
-            </label>
-            <label className="bid-type-option">
-                <input
-                    type="checkbox"
-                    checked={selectedBidTypes.has("1m")}
-                    onChange={() => handleCheckboxChange("1m")}
-                />
-                <span className="bid-type-text">
-                    1♣/1♦
-                </span>
-            </label>
+            <button
+                className={`bid-type-button ${selectedBidTypes.has("1NT") ? 'selected' : ''}`}
+                onClick={() => handleButtonClick("1NT")}
+            >
+                Opening Bids
+            </button>
+            <button
+                className={`bid-type-button ${selectedBidTypes.has("1M") ? 'selected' : ''}`}
+                onClick={() => handleButtonClick("1M")}
+            >
+                Response with fit - M
+            </button>
+            <button
+                className={`bid-type-button ${selectedBidTypes.has("1m") ? 'selected' : ''}`}
+                onClick={() => handleButtonClick("1m")}
+            >
+                Response with fit
+            </button>
+            <button
+                className={`bid-type-button ${selectedBidTypes.has("general") ? 'selected' : ''}`}
+                onClick={() => handleButtonClick("general")}
+            >
+                General response
+            </button>
         </div>
     );
 }; 

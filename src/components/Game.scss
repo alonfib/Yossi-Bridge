@@ -10,11 +10,33 @@
   padding: 20px;
   gap: 20px;
   position: relative;
+
+  .new-game-button {
+    position: absolute;
+    top: 55%;
+    right: 9%;
+    padding: 10px 20px;
+    background-color: $button-color;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+
+    &:hover {
+      background-color: $button-hover;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
 }
 
 .game-board {
-  width: 600px;
-  height: 600px;
+  width: 540px;
+  height: 540px;
   background-color: $board-color;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -66,38 +88,13 @@
   align-items: center;
 }
 
-.game-controls {
-  margin: 0;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 14px;
-  background-color: $button-color;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-  &:hover {
-    background-color: $button-hover;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  }
-}
-
 @media (max-width: 1150px) {
   .game-container {
     grid-template-columns: minmax(auto, 1fr) 600px minmax(auto, 1fr);
     grid-template-rows: minmax(auto, 1fr) 600px minmax(auto, 1fr);
   }
 
-  .game-board {
-    width: 450px;
-    height: 450px;
-  }
+
 
   .suit {
     font-size: 20px;
