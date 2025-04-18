@@ -1,0 +1,104 @@
+.bidding-interface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+    padding: 20px;
+  
+    &::before {
+      content: 'בחרו הכרזה מתאימה';
+      color: #1A237E;
+      font-size: 24px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+  }
+  
+
+  .bid-levels, .bid-suits {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    width: 100%;
+  }
+  
+  .bid-button {
+    width: 60px;
+    height: 60px;
+    border: none;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  
+    // Level buttons (numbers)
+    &:not([data-suit]) {
+      border-radius: 50%;
+      font-size: 32px;
+      color: #1A237E;
+    }
+  
+    // Suit buttons
+    &[data-suit] {
+      border-radius: 30px;
+      width: 80px;
+      font-size: 36px;
+  
+      &[data-suit="♣"] { color: #4CAF50; }
+      &[data-suit="♦"] { color: #FB8C00; }
+      &[data-suit="♥"] { color: #E53935; }
+      &[data-suit="♠"] { color: #1E88E5; }
+      &[data-suit="NT"] { 
+        font-size: 24px;
+        color: #000;
+        font-weight: bold;
+      }
+    }
+  
+    &.selected {
+      background-color: #E8EAF6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+  
+  .submit-bid {
+    margin-top: 10px;
+    padding: 12px 60px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+    &:hover {
+      background-color: #45A049;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+  

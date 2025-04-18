@@ -73,3 +73,6 @@ export const generateValidDeal = (): CardType[][] => {
     const deck = shuffleDeck(createDeck());
     return dealHands(deck).map(sortHand);
 };
+
+export const BID_SUITS: Suit[] = ['♠', '♥', '♦', '♣', 'NT'];
+export const BID_LEVELS: BidLevel[] = [1, 2, 3, 4, 5, 6, 7];

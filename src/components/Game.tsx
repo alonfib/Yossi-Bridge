@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { GameState, BidLevel } from '../types/game';
-import { Suit } from '../types/card';
 import './Game.scss';
 import { generateValidDeal } from '../utils/utils';
 import { Hand } from './Hand/Hand';
 import { BiddingTypeMenu } from './bidding/BiddingTypeMenu';
 import { handleBid } from '../utils/game';
 import useHandleBid from '../hooks/useHandleBid';
+import BiddingBox from './BiddingBox/BiddingBox';
 
-const BID_SUITS: (Suit | 'NT')[] = ['♠', '♥', '♦', '♣', 'NT'];
-const BID_LEVELS: BidLevel[] = [1, 2, 3, 4, 5, 6, 7];
+
 
 const initialGameState: GameState = {
     hands: {
@@ -114,39 +113,7 @@ export const Game: React.FC = () => {
                     </div>
                 </div>
             </div>
-            <div className="bidding-interface">
-                <div className="bid-levels">
-                    {BID_LEVELS.map(level => (
-                        <button
-                            key={level}
-                            className={`bid-button ${selectedLevel === level ? 'selected' : ''}`}
-                            onClick={() => setSelectedLevel(level)}
-                        >
-                            {level}
-                        </button>
-                    ))}
-                </div>
-                <div className="bid-suits">
-                    {BID_SUITS.map(suit => (
-                        <button
-                            key={suit}
-                            className={`bid-button ${selectedSuit === suit ? 'selected' : ''}`}
-                            onClick={() => setSelectedSuit(suit)}
-                            data-suit={suit}
-                        >
-                            {suit}
-                        </button>
-                    ))}
-                </div>
-                <button
-                    className="submit-bid"
-                    onClick={() => {
-                        setSelectedSuit('PASS');
-                    }}
-                >
-                    PASS
-                </button>
-            </div>
+            <BiddingBox selectedLevel={selectedLevel} selectedSuit={selectedSuit} setSelectedLevel={setSelectedLevel} setSelectedSuit={setSelectedSuit} />
             <BiddingTypeMenu />
         </div>
     );
