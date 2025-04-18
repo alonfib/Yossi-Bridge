@@ -43,6 +43,8 @@ export const Game: React.FC = () => {
     const [showPopup, setShowPopup] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [bidSubmitted, setBidSubmitted] = useState(false);
+    const [selectedMenuType, setSelectedMenuType] = useState<string | null>(null);
+
     const { selectedLevel, selectedSuit, setSelectedLevel, setSelectedSuit, resetAnswer } = useHandleBid({
         hand: gameState.hands.North,
         onAnswerSubmitted: (isValid: boolean) => {
@@ -50,6 +52,15 @@ export const Game: React.FC = () => {
                 setIsCorrect(isValid);
                 setShowPopup(true);
                 setBidSubmitted(true);
+
+                // Reset after popup disappears, regardless of answer
+                setTimeout(() => {
+                    setBidSubmitted(false);
+                    setSelectedLevel(null);
+                    setSelectedSuit(null);
+                    resetAnswer();
+                    setShowPopup(false);
+                }, 2000);
             }
         }
     });
@@ -59,6 +70,15 @@ export const Game: React.FC = () => {
             setIsCorrect(isValid);
             setShowPopup(true);
             setBidSubmitted(true);
+
+            // Reset after popup disappears, regardless of answer
+            setTimeout(() => {
+                setBidSubmitted(false);
+                setSelectedLevel(null);
+                setSelectedSuit(null);
+                resetAnswer();
+                setShowPopup(false);
+            }, 2000);
         }
     };
 
@@ -84,6 +104,9 @@ export const Game: React.FC = () => {
 
     useEffect(() => {
         const handleKeyPress = (e: KeyboardEvent) => {
+            // Only handle key presses if opening bids is selected
+            if (selectedMenuType !== "1NT") return;
+
             // Handle number keys for bid level
             if (e.key >= '1' && e.key <= '7') {
                 setSelectedLevel(parseInt(e.key) as BidLevel);
@@ -118,20 +141,29 @@ export const Game: React.FC = () => {
 
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [selectedLevel, selectedSuit, handleBid]);
-
-
+    }, [selectedLevel, selectedSuit, handleBid, selectedMenuType]);
 
     return (
         <div className="game-container">
-            <Hand position="North" cards={gameState.hands.North} showPoints={true} />
+            {selectedMenuType === "1NT" && (
+                <Hand position="North" cards={gameState.hands.North} showPoints={true} />
+            )}
             <div className="game-board">
                 <div className="center-area">
                 </div>
             </div>
-            <BiddingBox selectedLevel={selectedLevel} selectedSuit={selectedSuit} setSelectedLevel={setSelectedLevel} setSelectedSuit={setSelectedSuit} />
-            <BiddingTypeMenu />
-            <button className="new-game-button" onClick={startNewGame}>New Game</button>
+            {selectedMenuType === "1NT" && (
+                <BiddingBox
+                    selectedLevel={selectedLevel}
+                    selectedSuit={selectedSuit}
+                    setSelectedLevel={setSelectedLevel}
+                    setSelectedSuit={setSelectedSuit}
+                />
+            )}
+            {selectedMenuType === "1NT" && (
+                <button className="new-game-button" onClick={startNewGame}>New Game</button>
+            )}
+            <BiddingTypeMenu onMenuSelect={setSelectedMenuType} />
             {showPopup && (
                 <Popup
                     message={isCorrect ? "Correct!" : "Wrong!"}

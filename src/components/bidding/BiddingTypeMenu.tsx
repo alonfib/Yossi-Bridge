@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import './BiddingTypeMenu.scss';
 
-export const BiddingTypeMenu: React.FC = () => {
+interface BiddingTypeMenuProps {
+    onMenuSelect: (value: string | null) => void;
+}
+
+export const BiddingTypeMenu: React.FC<BiddingTypeMenuProps> = ({ onMenuSelect }) => {
     const [selectedBidTypes, setSelectedBidTypes] = useState<Set<string>>(new Set());
 
     const handleButtonClick = (value: string) => {
@@ -9,8 +13,11 @@ export const BiddingTypeMenu: React.FC = () => {
             const newSet = new Set(prev);
             if (newSet.has(value)) {
                 newSet.delete(value);
+                onMenuSelect(null);
             } else {
+                newSet.clear();
                 newSet.add(value);
+                onMenuSelect(value);
             }
             return newSet;
         });

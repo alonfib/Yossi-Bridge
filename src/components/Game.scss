@@ -40,7 +40,18 @@
   background-color: $board-color;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: relative;
+  position: absolute;
+  top: 41.5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.bidding-interface {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .rank {
@@ -93,8 +104,6 @@
     grid-template-columns: minmax(auto, 1fr) 600px minmax(auto, 1fr);
     grid-template-rows: minmax(auto, 1fr) 600px minmax(auto, 1fr);
   }
-
-
 
   .suit {
     font-size: 20px;
